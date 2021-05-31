@@ -1,1 +1,3 @@
-# movies-explorer-api
+### movies-explorer-api
+
+Бэкенд сторона диплома
