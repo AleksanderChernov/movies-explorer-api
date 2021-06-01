@@ -8,7 +8,7 @@ const app = express();
 
 const cors = require('cors');
 
-const { PORT = 3005 } = process.env;
+const { PORT = 3000 } = process.env;
 const mongoose = require('mongoose');
 const { createUser, login } = require('./controllers/users');
 const errorHandler = require('./middlewares/error-handler');
