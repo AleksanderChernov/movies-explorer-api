@@ -50,6 +50,10 @@ const movieSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
+  movieId: {
+    type: Number,
+    required: true,
+  },
   nameEN: {
     type: String,
     required: true,

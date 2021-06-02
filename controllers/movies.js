@@ -6,8 +6,18 @@ const NoRightsErr = require('../middlewares/errors/NoRightsErr');
 
 module.exports.createMovie = (req, res, next) => {
   const {
-    country, director, duration, year, description, image, trailer, thumbnail, nameEN, nameRU,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    thumbnail,
+    nameEN,
+    nameRU,
   } = req.body;
+  const movieId = req.body._id;
   const owner = req.user._id;
   Movie.create({
     country,
@@ -21,6 +31,7 @@ module.exports.createMovie = (req, res, next) => {
     nameEN,
     nameRU,
     owner,
+    movieId,
   })
     .then((movie) => res.send({
       country: movie.country,
@@ -31,7 +42,7 @@ module.exports.createMovie = (req, res, next) => {
       image: movie.image,
       trailer: movie.trailer,
       thumbnail: movie.thumbnail,
-      movieId: movie._id,
+      movieId: movie.movieId,
       nameEN: movie.nameEN,
       nameRU: movie.nameRU,
       owner: movie.owner,
@@ -46,7 +57,7 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+  Movie.findOne({ movieId: req.params.movieId })
     .orFail(() => {
       throw new NotFoundErr('Фильм по заданному id отсутствует в базе');
     })
@@ -54,8 +65,8 @@ module.exports.deleteMovie = (req, res, next) => {
       if (req.user._id !== movie.owner.toString()) {
         next(new NoRightsErr('Вы можете удалять только свои фильмы'));
       } else {
-        Movie.findByIdAndRemove(req.params.movieId)
-          .then((data) => res.send(data))
+        Movie.findOneAndRemove({ movieId: req.params.movieId })
+          .then(() => res.send())
           .catch(next);
       }
     })
@@ -63,14 +74,6 @@ module.exports.deleteMovie = (req, res, next) => {
       next(err);
     });
 };
-
-/* module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movies) => res.send(movies))
-    .catch((err) => {
-      next(err);
-    });
-}; */
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })

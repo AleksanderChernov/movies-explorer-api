@@ -59,7 +59,10 @@ module.exports.registerValidator = celebrate({
 
 module.exports.movieIdValidator = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().alphanum().length(24).hex(),
+    movieId: Joi.string().required()
+      .messages({
+        'any.required': 'Необходимо внести id (номер) фильма',
+      }),
   }),
 });
 
@@ -104,6 +107,10 @@ module.exports.movieValidator = celebrate({
     nameEN: Joi.string().required()
       .messages({
         'any.required': 'Необходимо заполнить поле назввания фильма в англоязычных странах',
+      }),
+    _id: Joi.string().required()
+      .messages({
+        'any.required': 'Необходимо внести идентификатор фильма (число)',
       }),
   }),
   params: Joi.object().keys({
