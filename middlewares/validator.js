@@ -59,9 +59,10 @@ module.exports.registerValidator = celebrate({
 
 module.exports.movieIdValidator = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().required()
+    movieId: Joi.string().alphanum().length(24).hex()
       .messages({
         'any.required': 'Необходимо внести id (номер) фильма',
+        'string.length': 'Необходим 24-значный hex',
       }),
   }),
 });
@@ -76,7 +77,7 @@ module.exports.movieValidator = celebrate({
       .messages({
         'any.required': 'Необходимо заполнить поле режиссера',
       }),
-    duration: Joi.string().required()
+    duration: Joi.number().required()
       .messages({
         'any.required': 'Необходимо заполнить поле продолжительности',
       }),
@@ -108,9 +109,10 @@ module.exports.movieValidator = celebrate({
       .messages({
         'any.required': 'Необходимо заполнить поле назввания фильма в англоязычных странах',
       }),
-    _id: Joi.string().required()
+    id: Joi.number().max(99).required()
       .messages({
-        'any.required': 'Необходимо внести идентификатор фильма (число)',
+        'any.required': 'Необходимо внести идентификатор фильма (число) и оно должно быть не больше 99',
+        'number.max': 'Необходимо внести число не больше 99',
       }),
   }),
   params: Joi.object().keys({

@@ -17,7 +17,7 @@ module.exports.createMovie = (req, res, next) => {
     nameEN,
     nameRU,
   } = req.body;
-  const movieId = req.body._id;
+  const movieId = req.body.id;
   const owner = req.user._id;
   Movie.create({
     country,
@@ -57,7 +57,7 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findOne({ movieId: req.params.movieId })
+  Movie.findById(req.params.movieId)
     .orFail(() => {
       throw new NotFoundErr('Фильм по заданному id отсутствует в базе');
     })
@@ -65,9 +65,7 @@ module.exports.deleteMovie = (req, res, next) => {
       if (req.user._id !== movie.owner.toString()) {
         next(new NoRightsErr('Вы можете удалять только свои фильмы'));
       } else {
-        Movie.findOneAndRemove({ movieId: req.params.movieId })
-          .then(() => res.send())
-          .catch(next);
+        movie.remove().then(() => res.send({ message: `Фильм ${movie.nameEN} удален` }));
       }
     })
     .catch((err) => {

@@ -59,6 +59,8 @@ module.exports.modifyUser = (req, res, next) => {
     .catch((err) => {
       if (err.kind === 'ValidationError') {
         next(new WrongInfoErr({ message: 'Переданы некорректные данные при обновлении пользователя' }));
+      } else if (err.name === 'MongoError' && err.code === 11000) {
+        next(new EmailDoubledErr('Такой e-mail уже существует в базе'));
       } else {
         next(err);
       }
