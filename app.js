@@ -4,6 +4,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
+const { NODE_ENV, BASE_URL } = process.env;
 const app = express();
 
 const cors = require('cors');
@@ -31,7 +32,7 @@ app.use(cors({
   origin: 'https://ancher-movies-project.nomoredomains.icu',
   credentials: true,
 }));
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? BASE_URL : 'mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
