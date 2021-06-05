@@ -14,7 +14,7 @@ const { createUser, login } = require('./controllers/users');
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundErr = require('./middlewares/errors/NotFoundErr');
 const auth = require('./middlewares/auth');
-const { loginValidator } = require('./middlewares/validator');
+const { loginValidator, registerValidator } = require('./middlewares/validator');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const limiter = rateLimit({
@@ -39,11 +39,11 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 });
 
 app.post('/signin', loginValidator, login);
-app.post('/signup', loginValidator, createUser);
+app.post('/signup', registerValidator, createUser);
 
 app.use('/', auth);
-app.use('/users', auth, require('./routes/users'));
-app.use('/movies', auth, require('./routes/movies'));
+app.use('/users', require('./routes/users'));
+app.use('/movies', require('./routes/movies'));
 
 app.use(() => {
   throw new NotFoundErr('Ошибка 404. Такой страницы не существует');

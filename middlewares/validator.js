@@ -107,15 +107,12 @@ module.exports.movieValidator = celebrate({
       }),
     nameEN: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить поле назввания фильма в англоязычных странах',
+        'any.required': 'Необходимо заполнить поле названия фильма в англоязычных странах',
       }),
-    id: Joi.number().max(99).required()
+    movieId: Joi.number().max(99).required()
       .messages({
         'any.required': 'Необходимо внести идентификатор фильма (число) и оно должно быть не больше 99',
         'number.max': 'Необходимо внести число не больше 99',
       }),
-  }),
-  params: Joi.object().keys({
-    owner: Joi.string().alphanum().length(24).hex(),
   }),
 });

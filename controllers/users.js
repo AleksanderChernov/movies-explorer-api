@@ -5,7 +5,7 @@ const User = require('../models/user');
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const NotFoundErr = require('../middlewares/errors/NotFoundErr');
-const EmailDoubledErr = require('../middlewares/errors/EmailDoubledErr');
+const ConflictError = require('../middlewares/errors/ConflictError');
 const WrongInfoErr = require('../middlewares/errors/WrongInfoErr');
 const WrongPassOrMail = require('../middlewares/errors/WrongPassOrMail');
 
@@ -37,7 +37,7 @@ module.exports.createUser = (req, res, next) => {
         if (err.kind === 'ValidationError') {
           next(new WrongInfoErr({ message: 'Переданы некорректные данные при обновлении пользователя' }));
         } else if (err.name === 'MongoError' && err.code === 11000) {
-          next(new EmailDoubledErr('Такой e-mail уже существует в базе'));
+          next(new ConflictError('Такой e-mail уже существует в базе'));
         } else if (err.statusCode === 400) {
           next(new WrongInfoErr('Переданы некорректные данные при создании пользователя'));
         } else {
@@ -60,7 +60,7 @@ module.exports.modifyUser = (req, res, next) => {
       if (err.kind === 'ValidationError') {
         next(new WrongInfoErr({ message: 'Переданы некорректные данные при обновлении пользователя' }));
       } else if (err.name === 'MongoError' && err.code === 11000) {
-        next(new EmailDoubledErr('Такой e-mail уже существует в базе'));
+        next(new ConflictError('Такой e-mail уже существует в базе'));
       } else {
         next(err);
       }
